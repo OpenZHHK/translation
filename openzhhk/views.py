@@ -21,19 +21,19 @@ class DetailView(MethodView):
 
 class NewView(MethodView):
 
-    def get(self, slug):
+    def get(self):
         return render_template('new.html')
 
 
 class SearchView(MethodView):
 
-    def get(self, slug):
+    def get(self):
         return render_template('search.html')
 
 
 class StatsView(MethodView):
 
-    def get(self, slug):
+    def get(self):
         stats = {}
         return render_template('stats.html', stats=stats)
 

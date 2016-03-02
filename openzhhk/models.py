@@ -6,8 +6,8 @@ from openzhhk import db
 class Word(db.Document):
     inputtext = db.StringField(required=True)
     translation = db.StringField(required=True)
-    frequency = db.IntField(required=True,default=0,min_value=0)
-    flags = db.StringField()
+    frequency = db.IntField(required=True, default=0, min_value=0)
+    flags = db.StringField(required=False)
     originalip = db.StringField(required=False)
     lastip = db.StringField(required=False)
     deleted = db.BooleanField(default=False)
@@ -18,7 +18,7 @@ class Word(db.Document):
     @classmethod
     def pre_save(cls, sender, document, **kwargs):
         document.updated_at = datetime.now()
-        print len(document.inputtext.split())
+        singleword = len(document.inputtext.split())==1
 
     meta = {
         'indexes': ['inputtext', 'deleted', 'singleword', 'frequency'],
