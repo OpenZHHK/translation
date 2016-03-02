@@ -15,7 +15,7 @@ Build by [Ankur Singh](ankur13019@iiitd.ac.in) for freelancer user josephlam.
 - Install Python ([Anaconda](https://www.continuum.io/anaconda) preferred)
 - Install MongoDB
 - Install pip
-- pip install -U flask flask-script WTForms mongoengine flask_mongoengine
+- pip install -U flask flask-script WTForms mongoengine flask_mongoengine mongoengine-extras flask_debugtoolbar
 
 ## Models
 

@@ -2,7 +2,7 @@
 
 {% block content %}
     {% for word in words %}
-      <h2><a href="{{ url_for('views.detail', slug=word.inputtext) }}">{{ word.inputtext }}</a></h2>
+      <h2><a href="{{ url_for('views.detail', slug=word.slug) }}">{{ word.inputtext }}</a></h2>
       <p>{{ word.translation|truncate(100) }}</p>
       <p>
         {{ word.created_at.strftime('%H:%M %Y-%m-%d') }} | {{ word.frequency }}

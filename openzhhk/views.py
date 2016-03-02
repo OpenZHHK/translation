@@ -15,7 +15,7 @@ class ListView(MethodView):
 class DetailView(MethodView):
 
     def get(self, slug):
-        word = Word.objects.get_or_404(inputtext=slug)
+        word = Word.objects.get_or_404(slug=slug)
         return render_template('detail.html', word=word)
 
 
