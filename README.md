@@ -12,7 +12,10 @@ Build by [Ankur Singh](ankur13019@iiitd.ac.in) for freelancer user josephlam.
 
 ## Installation
 
-- Install python ([Anaconda](https://www.continuum.io/anaconda) preferred) 
+- Install Python ([Anaconda](https://www.continuum.io/anaconda) preferred)
+- Install MongoDB
+- Install pip
+- pip install -U flask flask-script WTForms mongoengine flask_mongoengine
 
 ## Models
 
@@ -20,7 +23,7 @@ Only one model - Word
 
 Fields:
 
-- input:string:required
+- inputtext:string:required
 - translation:string:required
 - frequency:integer>=0:default=0
 - flags:string
@@ -28,8 +31,8 @@ Fields:
 - lastip:string
 - deleted:boolean:default=false
 - singleword:boolean:default=dynamicially_computed
-- created_at:datetime (from timestamps!)
-- updated_at:datetime (from timestamps!)
+- created_at:datetime
+- updated_at:datetime
 
 ## REST API
 
