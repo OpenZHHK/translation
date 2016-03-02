@@ -1,6 +1,7 @@
 from datetime import datetime
 from openzhhk import db
 from mongoengine_extras.fields import AutoSlugField
+from mongoengine import signals
 # from flask import url_for
 
 
@@ -15,16 +16,25 @@ class Word(db.Document):
     singleword = db.BooleanField(default=True)
     created_at = db.DateTimeField(default=datetime.now())
     updated_at = db.DateTimeField(default=datetime.now())
-    slug = AutoSlugField(populate_from='inputtext')
+    slug = AutoSlugField()
 
+    @classmethod
     def pre_save(cls, sender, document, **kwargs):
         document.updated_at = datetime.now()
         document.singleword = len(document.inputtext.split()) == 1
 
     meta = {
-        'indexes': ['inputtext', 'deleted', 'singleword', 'frequency','slug'],
+        'indexes': ['inputtext', 'deleted', 'singleword', 'frequency', 'slug'],
         'ordering': ['-frequency']
     }
 
+    def soft_delete(self):
+        self.update(deleted=True)
+
     def __unicode__(self):
         return self.inputtext
+
+    def title(self):
+        return self.inputtext
+
+signals.pre_save.connect(Word.pre_save, sender=Word)

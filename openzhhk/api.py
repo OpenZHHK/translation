@@ -1,5 +1,5 @@
 from flask_restful import reqparse, abort, Api, Resource
-from flask import jsonify, Blueprint
+from flask import jsonify, Blueprint, request
 from openzhhk import app
 from openzhhk.models import Word
 
@@ -23,13 +23,15 @@ class Words(Resource):
 
     def delete(self, slug):
         obj = get_word(slug)
-        obj.delete()
+        obj.soft_delete()
         return jsonify({'status': 'ok'})
 
     def put(self, slug):
         obj = get_word(slug)
         args = parser.parse_args()
+        args["lastip"] = request.remote_addr
         obj.update(**args)
+        obj.reload()
         return jsonify({'status': 'ok', 'word': obj})
 
 
@@ -40,6 +42,9 @@ class WordList(Resource):
 
     def post(self):
         args = parser.parse_args()
+        args["lastip"] = request.remote_addr
+        args["originalip"] = request.remote_addr
+        args["slug"] = args["inputtext"]
         obj = Word(**args)
         obj.save()
         return jsonify({'status': 'ok', 'word': obj})
