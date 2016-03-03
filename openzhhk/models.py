@@ -1,7 +1,9 @@
 from datetime import datetime
 from openzhhk import db
 from mongoengine_extras.fields import AutoSlugField
-from mongoengine import signals
+from mongoengine import signals, queryset_manager, Q
+
+
 # from flask import url_for
 
 
@@ -17,6 +19,23 @@ class Word(db.Document):
     created_at = db.DateTimeField(default=datetime.now())
     updated_at = db.DateTimeField(default=datetime.now())
     slug = AutoSlugField()
+
+    @queryset_manager
+    def active_objects(self, queryset):
+        return queryset.filter(deleted=False)
+
+    # @queryset_manager
+    # def get_by_(self, queryset):
+    #     return queryset.filter(deleted=False)
+
+    @classmethod
+    def get_paginated(cls, page=1, q='', count=5):
+        if count > 50:
+            count = 50
+        if q != "":
+            return cls.active_objects(Q(inputtext__icontains=q) | Q(translation__icontains=q)).paginate(page, count)
+        else:
+            return cls.active_objects.paginate(page, count)
 
     @classmethod
     def pre_save(cls, sender, document, **kwargs):

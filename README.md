@@ -30,13 +30,13 @@ Fields:
 - originalip:string
 - lastip:string
 - deleted:boolean:default=false
-- singleword:boolean:default=dynamicially_computed
+- singleword:boolean:default=dynamically_computed
 - created_at:datetime
 - updated_at:datetime
 
 ## REST API
 
-### /api/v1/word
+### /api/v1/words
 
 > GET /?page=1&count=5: Index ordered by frequency, paginated by page and items = count
 > POST /: Create from params[word]
@@ -44,8 +44,8 @@ Fields:
 > POST /id: Update
 > DELETE /id: Delete
 
-> GET /download?type=(single|multiple): get all words, of the type defined sorted by name in the given format
-> POST /upload: upload a file with the a delimited file to create word objects in bulk
+> GET _file?type=(single|multiple): get all words, of the type defined sorted by name in the given format
+> POST _file: upload a file with the a delimited file to create word objects in bulk
 
 ## Delimited File Format
 
@@ -75,7 +75,7 @@ i=dimi,t=work,f=192,ff=
 - Display a message if not found
 > GET /new: The new page (the online form) (with the upload button)
 - No Duplicate Entries
-- Defination of unique: (input,translation) is unique
+- Definition of unique: (input,translation) is unique
 > GET /list?: Show all the entries, paginated with infinite scroll/lazy load ajax
 - Option type: single/multiple word support
 - Option q: string to search
@@ -84,7 +84,7 @@ i=dimi,t=work,f=192,ff=
 - Show as a simple bootstrap table, with check box and a delete button on top to delete selected after confirmation
 > GET /stats: Show the stats 
 - Entries in the database
-- Latest Updation date time
+- Latest update date time
 - Unique inputs
 - Unique translations
 - Unique IPs
