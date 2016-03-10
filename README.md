@@ -38,8 +38,8 @@ Fields:
 
 ### /api/v1/words
 
-> GET /?page=1&count=5: Index ordered by frequency, paginated by page and items = count
-> POST /: Create from params[word]
+> GET /?page=1&count=5&q=search_text&singleword=false: Index ordered by frequency, paginated by page and items = count, search with q
+> POST /: Create from params (inputtext, translation, frequency, flags)
 > GET /id: Show
 > POST /id: Update
 > DELETE /id: Delete

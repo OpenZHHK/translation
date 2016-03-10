@@ -1,17 +1,71 @@
 {% extends "base.html" %}
-
+{# TODO: Add check boxes #}
+{# TODO: Add button to delete #}
+{# TODO: Add links to detail.html #}
+{# TODO: Add links to download as delimited file, along with singleword checkbox #}
 {% block content %}
-	<section>
-
+	<section class="hero">
+		<div class="hero-content">
 		<div class="container">
-			{% for word in words.items %}
-				<h2><a href="{{ url_for('views.detail', slug=word.slug) }}">{{ word.inputtext }}</a></h2>
-				<p>{{ word.translation|truncate(100) }}</p>
-				<p>
-					{{ word.created_at.strftime('%H:%M %Y-%m-%d') }} | {{ word.frequency }}
-				</p>
-			{% endfor %}
+			<table class="table" id="list_table">
+			  <thead>
+			    <tr>
+				    <th></th>
+			      <th>Word</th>
+			      <th>Translation</th>
+			      <th>Frequency</th>
+			      <th>Flags</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  </tbody>
+			</table>
+			<a id="more" class="button">More</a>
 		</div>
+			</div>
 	</section>
 
 {% endblock %}
+
+<script>
+	{% block js_footer %}
+		var page = 1;
+		var q = "{{ q }}";
+		var has_next = true;
+		var more_button= $("#more");
+
+		function generate_tr(data){
+			html = "<tr><td></td><td>"+data.inputtext+"</td><td>"+data.translation+"</td><td>"+data.frequency+"</td><td>"+data.flags+"</td></tr>";
+			return html;
+		}
+		function load_more(){
+			if(has_next)
+			{
+				var url = "/api/v1/words?count=15&q="+q+"&page="+page;
+				$.getJSON(url, function(data){
+					if(!data.has_next){
+						has_next = false;
+						more_button.addClass("is-disabled");
+					}
+					console.info(data);
+					var html = "";
+					$.each(data.words, function(i, item){
+						html += generate_tr(item);
+					});
+					$("#list_table").append(html);
+					page += 1;
+				});
+			}
+
+		}
+		more_button.on('click',function(){
+			load_more();
+		});
+		$(window).scroll(function(){
+	    if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300){
+				load_more();
+	    }
+    });
+		load_more();
+	{% endblock %}
+</script>

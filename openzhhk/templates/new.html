@@ -11,6 +11,10 @@
 			</div>
 			<div class="t_form">
 				<form id="new_form">
+					<div id="new-success" class="message is-success hidden">
+						<div class="message-header">Success</div>
+						<div class="message-body">Translation saved successfully!</div>
+					</div>
 					<p class="control">
 						<label class="label">Word</label>
 						<input class="input" required="required" name="inputtext" type="text" placeholder="Word">
@@ -52,9 +56,10 @@
 				dataType: 'json',
 				encode: true
 			}).done(function (data) {
-				var success_html = '<div class="message is-success"><div class="message-header">Success</div>' +
-						'<div class="message-body">Translation saved successfully!</div></div>';
-				$form.prepend(success_html);
+				$("#new-success").removeClass("hidden");
+				setTimeout(function(){
+					$("#new-success").addClass("hidden");
+				},5000);
 			}).fail(function (data) {
 				console.log(data)
 			});

@@ -10,15 +10,11 @@ WordForm = model_form(Word)
 
 parser = reqparse.RequestParser()
 parser.add_argument('q', required=False, default='')
-parser.add_argument('page', required=False, default=1, type=int)
-parser.add_argument('count', required=False, default=5, type=int)
 
 class ListView(MethodView):
 	def get(self):
 		args = parser.parse_args()
-		print args
-		words = Word.get_paginated(**args)
-		return render_template('list.html', words=words)
+		return render_template('list.html', q=args["q"])
 
 
 class DetailView(MethodView):
@@ -48,5 +44,5 @@ views.add_url_rule('/', view_func=SearchView.as_view('search'))
 views.add_url_rule('/list', view_func=ListView.as_view('list'))
 views.add_url_rule('/new', view_func=NewView.as_view('new'))
 views.add_url_rule('/stats', view_func=StatsView.as_view('stats'))
-views.add_url_rule('/<slug>', view_func=DetailView.as_view('detail'))
+views.add_url_rule('/word/<slug>', view_func=DetailView.as_view('detail'))
 

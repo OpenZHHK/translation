@@ -14,6 +14,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('q', required=False, default='')
 parser.add_argument('page', required=False, default=1, type=int)
 parser.add_argument('count', required=False, default=5, type=int)
+parser.add_argument('singleword', required=False, default=False, type=bool)
 
 file_parser = reqparse.RequestParser()
 
@@ -91,4 +92,4 @@ class WordFile(Resource):
 
 api.add_resource(WordList, '/api/v1/words')
 api.add_resource(WordFile, '/api/v1/words_file')
-api.add_resource(Words, '/api/v1/words/<slug>')
+api.add_resource(Words, '/api/v1/word/<slug>')
