@@ -2,8 +2,11 @@ from flask import Blueprint, request, redirect, render_template, url_for
 from flask.ext.restful import reqparse
 from flask.views import MethodView
 from openzhhk.models import Word
+from flask.ext.mongoengine.wtf import model_form
 
 views = Blueprint('views', __name__, template_folder='templates')
+
+WordForm = model_form(Word)
 
 parser = reqparse.RequestParser()
 parser.add_argument('q', required=False, default='')

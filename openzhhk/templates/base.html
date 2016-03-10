@@ -6,6 +6,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.0.16/css/bulma.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/styles/custom.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   </head>
 
   <body>
@@ -27,6 +28,11 @@
       </div>
     </footer>
     {% endblock %}
-    {% block js_footer %}{% endblock %}
+    <script>
+	    $(document).on('ready',function(){
+		    {% block js_footer %}{% endblock %}
+	    });
+    </script>
+
   </body>
 </html>

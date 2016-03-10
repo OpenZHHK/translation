@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<section class="section">
+		<div class="container">
+			<div class="heading">
+				<h1 class="title">New Translation</h1>
+				<h2 class="subtitle">
+					Help us out by adding a new translation.
+				</h2>
+			</div>
+			<div class="t_form">
+				<form id="new_form">
+					<p class="control">
+						<label class="label">Word</label>
+						<input class="input" required="required" name="inputtext" type="text" placeholder="Word">
+					</p>
+					<p class="control">
+						<label class="label">Translation</label>
+						<input class="input" required="required" name="translation" type="text" placeholder="Translation">
+					</p>
+					<p class="control">
+						<label class="label">Frequency</label>
+						<input class="input" required="required" name="frequency" type="number" placeholder="1">
+					</p>
+					<p class="control">
+						<button class="button is-success">
+							Save!
+						</button>
+					</p>
+				</form>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+<script>
+	{% block js_footer %}
+		var $form = $("form#new_form");
+		$form.submit(function (e) {
+			// get the form data
+			var formData = {
+				'inputtext': $('input[name="inputtext"]').val(),
+				'translation': $('input[name="translation"]').val(),
+				'frequency': $('input[name="frequency"]').val()
+			};
+
+			// process the form
+			$.ajax({
+				type: 'POST',
+				url: '/api/v1/words',
+				data: formData,
+				dataType: 'json',
+				encode: true
+			}).done(function (data) {
+				var success_html = '<div class="message is-success"><div class="message-header">Success</div>' +
+						'<div class="message-body">Translation saved successfully!</div></div>';
+				$form.prepend(success_html);
+			}).fail(function (data) {
+				console.log(data)
+			});
+
+			e.preventDefault();
+			$form.trigger('reset');
+		});
+
+	{% endblock %}
+</script>
