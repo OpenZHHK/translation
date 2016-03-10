@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block topbar %}{% endblock %}
+{% block content %}
+	<section class="hero is-fullheight">
+		<!-- Hero header: will stick at the top -->
+		<div class="hero-header">
+			{% include "header.html" %}
+		</div>
+
+		<!-- Hero content: will be in the middle -->
+		<div class="hero-content">
+			<div class="container">
+				<form action="/list">
+					<p class="control is-grouped has-icon">
+						<input class="input is-large" type="text" name="q" placeholder="Find a repository">
+						<button type="submit" class="button is-info is-large">
+							Search
+						</button>
+					</p>
+				</form>
+
+			</div>
+		</div>
+
+		<!-- Hero footer: will stick at the bottom -->
+		<div class="hero-footer">
+			<h1>© 2016 OpenZHHK.com. All rights reserved.</h1>
+		</div>
+	</section>
+{% endblock %}
+{% block footer %}{% endblock %}

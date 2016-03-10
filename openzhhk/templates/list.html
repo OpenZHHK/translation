@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for word in words %}
-      <h2><a href="{{ url_for('views.detail', slug=word.slug) }}">{{ word.inputtext }}</a></h2>
-      <p>{{ word.translation|truncate(100) }}</p>
-      <p>
-        {{ word.created_at.strftime('%H:%M %Y-%m-%d') }} | {{ word.frequency }}
-      </p>
-    {% endfor %}
+	<section>
+
+		<div class="container">
+			{% for word in words.items %}
+				<h2><a href="{{ url_for('views.detail', slug=word.slug) }}">{{ word.inputtext }}</a></h2>
+				<p>{{ word.translation|truncate(100) }}</p>
+				<p>
+					{{ word.created_at.strftime('%H:%M %Y-%m-%d') }} | {{ word.frequency }}
+				</p>
+			{% endfor %}
+		</div>
+	</section>
+
 {% endblock %}
