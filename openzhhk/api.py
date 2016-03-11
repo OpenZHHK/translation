@@ -22,17 +22,30 @@ get_file_parser = reqparse.RequestParser()
 get_file_parser.add_argument('q', required=False, default="")
 get_file_parser.add_argument('singleword', required=False, default="False", type=str)
 
-file_parser = reqparse.RequestParser()
-
 
 def get_word(slug):
 	return Word.objects.get_or_404(id=slug)
 
 
 def parse_file(file_obj):
-	# TODO: Parse File
-	objects = file_obj
-	return objects
+	lines = file_obj.read().split("\n")
+	mapping = {"i": "inputtext", "f": "frequency", "t": "translation", "ff": "flags", "flags": "flags",
+	           "inputtext": "inputtext", "frequency": "frequency", "translation": "translation"}
+	words = []
+	for line in lines:
+		if line:
+			word = {}
+
+			for elem in line.split(","):
+				key, val = elem.split("=")
+				if key in mapping:
+					word_key = mapping[key]
+					word[word_key] = val
+
+			print word
+			words.append(Word(**word))
+
+	return words
 
 
 class Words(Resource):
@@ -89,14 +102,9 @@ class WordFile(Resource):
 
 	def post(self):
 		f = request.files['file']
-		print f.read()
-		# TODO: Get the file object
-		args = file_parser.parse_args()
-		file = args
-		# TODO: Get objects from file
-		objs = parse_file(file)
-		# TODO: Insert objects into db
-		Word(**objs).save()
+		objs = parse_file(f)
+		x = Word.objects.insert(objs)
+		print x
 		return jsonify({'status': 'ok'})
 
 
