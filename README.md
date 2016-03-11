@@ -8,14 +8,21 @@ Build by [Ankur Singh](ankur13019@iiitd.ac.in) for freelancer user josephlam.
 - Flask
 - Flask-Restful
 - Flask-mongoengine
-- WTForms
+- Python Faker to generate seed data
 
 ## Installation
 
 - Install Python ([Anaconda](https://www.continuum.io/anaconda) preferred)
 - Install MongoDB
 - Install pip
-- pip install -U flask flask-script WTForms mongoengine flask_mongoengine mongoengine-extras flask_debugtoolbar
+- `pip install -r requirements.txt`
+- Run `python manage.py seed` (to add some records to play with)
+
+## Running
+
+> python manage.py runserver
+
+Procfile is present to allow running using foreman or foreman-like systems.
 
 ## Models
 
