@@ -15,6 +15,10 @@
 						<div class="message-header">Success</div>
 						<div class="message-body">Translation saved successfully!</div>
 					</div>
+					<div id="new-error" class="message is-danger hidden">
+						<div class="message-header">Error</div>
+						<div class="message-body">Translation was not saved!</div>
+					</div>
 					<p class="control">
 						<label class="label">Word</label>
 						<input class="input" required="required" name="inputtext" type="text" placeholder="Word">
@@ -61,7 +65,11 @@
 					$("#new-success").addClass("hidden");
 				},5000);
 			}).fail(function (data) {
-				console.log(data)
+				$("#new-error").removeClass("hidden");
+				setTimeout(function(){
+					$("#new-error").addClass("hidden");
+				},5000);
+				console.log(data);
 			});
 
 			e.preventDefault();

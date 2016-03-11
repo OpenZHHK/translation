@@ -5,8 +5,8 @@ from mongoengine import signals, queryset_manager, Q
 
 
 class Word(db.Document):
-	inputtext = db.StringField(required=True)
-	translation = db.StringField(required=True)
+	inputtext = db.StringField(required=True, unique_with="translation")
+	translation = db.StringField(required=True, unique_with="inputtext")
 	frequency = db.IntField(required=True, default=0, min_value=0)
 	flags = db.StringField(required=False, default="")
 	originalip = db.StringField(required=True, default='0.0.0.0')
