@@ -35,6 +35,12 @@ def seed():
 		word["slug"] = word["inputtext"]
 		obj = Word(**word)
 		obj.save()
+	for _ in xrange(50):
+		word = {'inputtext': ' '.join(faker.words(2)), 'translation': ' '.join(faker.words()), 'frequency': randint(1, 100),
+		        'flags': faker.sentence()}
+		word["slug"] = word["inputtext"]
+		obj = Word(**word)
+		obj.save()
 
 if __name__ == "__main__":
 	manager.run()
