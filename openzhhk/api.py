@@ -22,7 +22,6 @@ get_file_parser = reqparse.RequestParser()
 get_file_parser.add_argument('q', required=False, default="")
 get_file_parser.add_argument('singleword', required=False, default="False", type=str)
 
-
 file_parser = reqparse.RequestParser()
 
 
@@ -34,6 +33,7 @@ def parse_file(file_obj):
 	# TODO: Parse File
 	objects = file_obj
 	return objects
+
 
 class Words(Resource):
 	def get(self, slug):
@@ -88,6 +88,8 @@ class WordFile(Resource):
 		                 as_attachment=True)
 
 	def post(self):
+		f = request.files['file']
+		print f.read()
 		# TODO: Get the file object
 		args = file_parser.parse_args()
 		file = args

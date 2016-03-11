@@ -32,6 +32,7 @@
 		var page = 1;
 		var q = "{{ q }}";
 		var has_next = true;
+		var loading = false;
 		var more_button= $("#more");
 
 		function generate_tr(data){
@@ -39,8 +40,9 @@
 			return html;
 		}
 		function load_more(){
-			if(has_next)
+			if(has_next && !loading)
 			{
+				loading = true;
 				var url = "/api/v1/words?count=15&q="+q+"&page="+page;
 				$.getJSON(url, function(data){
 					if(!data.has_next){
@@ -48,12 +50,15 @@
 						more_button.addClass("is-disabled");
 					}
 					console.info(data);
-					var html = "";
-					$.each(data.words, function(i, item){
-						html += generate_tr(item);
-					});
-					$("#list_table").append(html);
-					page += 1;
+					if (data.page == page) {
+						var html = "";
+						$.each(data.words, function (i, item) {
+							html += generate_tr(item);
+						});
+						$("#list_table").append(html);
+						page += 1;
+						loading = false;
+					}
 				});
 			}
 
