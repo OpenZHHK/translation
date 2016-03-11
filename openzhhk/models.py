@@ -25,15 +25,38 @@ class Word(db.Document):
 	# def get_by_(self, queryset):
 	#     return queryset.filter(deleted=False)
 
+
 	@classmethod
-	def get_paginated(cls, page=1, q='', count=5, singleword=False):
+	def get_all(cls, q='', singleword="False"):
+		if q != "":
+			if singleword == "True" or singleword == "true":
+				return cls.active_objects(Q(singleword=True) & (Q(inputtext__icontains=q) |
+			                                                      Q(translation__icontains=q))).all()
+			else:
+				return cls.active_objects(Q(inputtext__icontains=q) |
+			                                                      Q(translation__icontains=q)).all()
+		else:
+			if singleword == "True" or singleword == "true":
+				return cls.active_objects(singleword=True).all()
+			else:
+				return cls.active_objects.all()
+
+	@classmethod
+	def get_paginated(cls, page=1, q='', count=5, singleword="False"):
 		if count > 50:
 			count = 50
 		if q != "":
-			return cls.active_objects(Q(singleword=singleword) & (Q(inputtext__icontains=q) |
+			if singleword == "True" or singleword == "true":
+				return cls.active_objects(Q(singleword=True) & (Q(inputtext__icontains=q) |
 			                                                      Q(translation__icontains=q))).paginate(page, count)
+			else:
+				return cls.active_objects(Q(inputtext__icontains=q) |
+			                                                      Q(translation__icontains=q)).paginate(page, count)
 		else:
-			return cls.active_objects.paginate(page, count)
+			if singleword == "True" or singleword == "true":
+				return cls.active_objects(singleword=True).paginate(page, count)
+			else:
+				return cls.active_objects.paginate(page, count)
 
 	@classmethod
 	def pre_save(cls, sender, document, **kwargs):

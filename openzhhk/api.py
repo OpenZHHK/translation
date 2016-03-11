@@ -2,7 +2,7 @@ from flask_restful import reqparse, abort, Api, Resource
 from flask import jsonify, Blueprint, request, send_file
 from openzhhk.models import Word
 from cStringIO import StringIO
-
+from utils import nocache
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -16,7 +16,12 @@ parser = reqparse.RequestParser()
 parser.add_argument('q', required=False, default='')
 parser.add_argument('page', required=False, default=1, type=int)
 parser.add_argument('count', required=False, default=5, type=int)
-parser.add_argument('singleword', required=False, default=False, type=bool)
+parser.add_argument('singleword', required=False, default="False", type=str)
+
+get_file_parser = reqparse.RequestParser()
+get_file_parser.add_argument('q', required=False, default="")
+get_file_parser.add_argument('singleword', required=False, default="False", type=str)
+
 
 file_parser = reqparse.RequestParser()
 
@@ -67,8 +72,10 @@ class WordList(Resource):
 
 
 class WordFile(Resource):
+	@nocache
 	def get(self):
-		words = Word.active_objects.all()
+		args = get_file_parser.parse_args()
+		words = Word.get_all(**args)
 		lines = ""
 		for obj in words:
 			lines += "i=%s,t=%s,f=%s,ff=%s\n" % (obj.inputtext, obj.translation, obj.frequency, obj.flags)

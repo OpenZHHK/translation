@@ -15,6 +15,7 @@ app.config['DEBUG_TB_PANELS'] = ['flask.ext.mongoengine.panels.MongoDebugPanel']
 db = MongoEngine(app)
 toolbar = DebugToolbarExtension(app)
 
+
 def register_blueprints(app):
     # Prevents circular imports
     from openzhhk.views import views
