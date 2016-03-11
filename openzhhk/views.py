@@ -23,7 +23,7 @@ class ListView(MethodView):
 		sw = 0
 		if args["singleword"] in true_values:
 			sw = 1
-		return render_template('list.html', q=args["q"], sw=sw, singleword=args["singleword"])
+		return render_template('list.html', q=args["q"], sw=sw)
 
 
 class DetailView(MethodView):

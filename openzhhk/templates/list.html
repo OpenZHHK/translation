@@ -1,43 +1,44 @@
 {% extends "base.html" %}
 {# TODO: Add button to delete #}
 {# TODO: Add links to detail.html #}
-{# TODO: Add links to download as delimited file, along with singleword checkbox #}
 {% block content %}
 	<section class="hero">
 		<div class="hero-content">
-		<div class="container">
-			<div class="search">
-				<form>
-					<p class="control is-grouped">
-					  <label class="checkbox">
-					    <input name="singleword" {{ "checked" if sw }} type="checkbox">
-					    Single word
-					  </label>
-					  <input class="input" name="q" type="text" value="{{ q }}" placeholder="Search for a word">
-					  <button class="button is-info">
-					    Search
-					  </button>
-						<a id="file_download_button" class="button">Download</a>
-					</p>
-				</form>
+			<div class="container">
+				<div class="search">
+					<form>
+						<p class="control is-grouped">
+							<label class="checkbox">
+								<input name="singleword" {{ "checked" if sw }} type="checkbox">
+								Single word
+							</label>
+							<input class="input" name="q" type="text" value="{{ q }}" placeholder="Search for a word">
+							<button class="button is-info">
+								Search
+							</button>
+							<a id="file_download_button" class="button">Download</a>
+						</p>
+					</form>
 
+				</div>
+				<hr>
+				<a id="delete_button" class="button is-danger">Delete</a>
+				<table class="table" id="list_table">
+					<thead>
+					<tr>
+						<th></th>
+						<th>Word</th>
+						<th>Translation</th>
+						<th>Frequency</th>
+						<th>Flags</th>
+					</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				<a id="more" class="button">More</a>
 			</div>
-			<table class="table" id="list_table">
-			  <thead>
-			    <tr>
-				    <th></th>
-			      <th>Word</th>
-			      <th>Translation</th>
-			      <th>Frequency</th>
-			      <th>Flags</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			  </tbody>
-			</table>
-			<a id="more" class="button">More</a>
 		</div>
-			</div>
 	</section>
 
 {% endblock %}
@@ -46,22 +47,21 @@
 	{% block js_footer %}
 		var page = 1;
 		var q = "{{ q }}";
-		var singleword = "{{ singleword }}";
+		var singleword = "{{ sw }}";
 		var has_next = true;
 		var loading = false;
-		var more_button= $("#more");
+		var more_button = $("#more");
 
-		function generate_tr(data){
-			html = "<tr><td></td><td>"+data.inputtext+"</td><td>"+data.translation+"</td><td>"+data.frequency+"</td><td>"+data.flags+"</td></tr>";
+		function generate_tr(data) {
+			html = "<tr><td><input class='word-check' name='check' data-oid='" + data.slug + "' type='checkbox'></td><td>" + data.inputtext + "</td><td>" + data.translation + "</td><td>" + data.frequency + "</td><td>" + data.flags + "</td></tr>";
 			return html;
 		}
-		function load_more(){
-			if(has_next && !loading)
-			{
+		function load_more() {
+			if (has_next && !loading) {
 				loading = true;
-				var url = "/api/v1/words?count=15&q="+q+"&page="+page+"&singleword="+singleword;
-				$.getJSON(url, function(data){
-					if(!data.has_next){
+				var url = "/api/v1/words?count=15&q=" + q + "&page=" + page + "&singleword=" + singleword;
+				$.getJSON(url, function (data) {
+					if (!data.has_next) {
 						has_next = false;
 						more_button.addClass("is-disabled");
 					}
@@ -79,21 +79,37 @@
 			}
 
 		}
-		more_button.on('click',function(){
+		more_button.on('click', function () {
 			load_more();
 		});
-		$(window).scroll(function(){
-	    if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300){
+		$(window).scroll(function () {
+			if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300) {
 				load_more();
-	    }
-    });
+			}
+		});
 		load_more();
 
-		$("#file_download_button").on("click",function(e){
+		$("#file_download_button").on("click", function (e) {
 			e.preventDefault();
 			var singleword = $('input[name="singleword"]').is(':checked');
 			var q = $('input[name="q"]').val();
-			window.location = "/api/v1/words_file?q="+q+"&singleword="+singleword;
+			window.location = "/api/v1/words_file?q=" + q + "&singleword=" + singleword;
+		});
+
+		$("#delete_button").on("click", function (e) {
+			e.preventDefault();
+			var w = $("input.word-check:checked");
+			$.each(w, function (i, elem) {
+				var oid = $(elem).data("oid");
+				$.ajax({
+					url: '/api/v1/word/' + oid,
+					type: 'DELETE',
+					success: function (result) {
+						console.log("deleted: " + oid);
+						$(elem).parent().parent().fadeOut(500);
+					}
+				});
+			});
 		});
 	{% endblock %}
 </script>

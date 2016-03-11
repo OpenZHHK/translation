@@ -24,7 +24,7 @@ get_file_parser.add_argument('singleword', required=False, default="False")
 
 
 def get_word(slug):
-	return Word.objects.get_or_404(id=slug)
+	return Word.objects.get_or_404(slug=slug)
 
 
 def parse_file(file_obj):
@@ -41,8 +41,6 @@ def parse_file(file_obj):
 				if key in mapping:
 					word_key = mapping[key]
 					word[word_key] = val
-
-			print word
 			words.append(Word(**word))
 
 	return words
@@ -78,7 +76,6 @@ class WordList(Resource):
 		args = form_parser.parse_args()
 		args["lastip"] = request.remote_addr
 		args["originalip"] = request.remote_addr
-		args["slug"] = args["inputtext"]
 		obj = Word(**args)
 		obj.save()
 		return jsonify({'status': 'ok', 'word': obj})
@@ -92,7 +89,6 @@ class WordFile(Resource):
 		lines = ""
 		for obj in words:
 			lines += "i=%s,t=%s,f=%s,ff=%s\n" % (obj.inputtext, obj.translation, obj.frequency, obj.flags)
-		print lines
 		sio = StringIO()
 		sio.write(lines)
 		sio.seek(0)
@@ -104,7 +100,6 @@ class WordFile(Resource):
 		f = request.files['file']
 		objs = parse_file(f)
 		x = Word.objects.insert(objs)
-		print x
 		return jsonify({'status': 'ok'})
 
 

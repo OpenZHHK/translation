@@ -30,8 +30,8 @@ def clean():
 def soft_clean():
 	words = Word.active_objects.all()
 	for word in words:
-		word.deleted = True
-		word.save()
+		word.soft_delete()
+
 
 @manager.command
 def seed():
@@ -39,13 +39,11 @@ def seed():
 	for _ in xrange(50):
 		word = {'inputtext': faker.word(), 'translation': faker.word(), 'frequency': randint(1, 100),
 		        'flags': faker.sentence()}
-		word["slug"] = word["inputtext"]
 		obj = Word(**word)
 		obj.save()
 	for _ in xrange(50):
 		word = {'inputtext': ' '.join(faker.words(2)), 'translation': ' '.join(faker.words()), 'frequency': randint(1, 100),
 		        'flags': faker.sentence()}
-		word["slug"] = word["inputtext"]
 		obj = Word(**word)
 		obj.save()
 

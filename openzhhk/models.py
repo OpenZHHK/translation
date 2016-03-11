@@ -1,7 +1,10 @@
+import re
 from datetime import datetime
 from openzhhk import db, true_values
-from mongoengine_extras.fields import AutoSlugField
+from mongoengine_extras.fields import SlugField
 from mongoengine import signals, queryset_manager, Q
+
+from openzhhk.utils import slugify
 
 
 class Word(db.Document):
@@ -15,53 +18,49 @@ class Word(db.Document):
 	singleword = db.BooleanField(default=True)
 	created_at = db.DateTimeField(default=datetime.now())
 	updated_at = db.DateTimeField(default=datetime.now())
-	slug = AutoSlugField()
+	slug = SlugField(required=True, unique=True)
+
+	@classmethod
+	def _generate_slug(cls, field, value):
+		count = 1
+		slug = slug_attempt = slugify(value)
+		while cls.objects(**{field: slug_attempt}).count() > 0:
+			slug_attempt = '%s-%s' % (slug, count)
+			count += 1
+		return slug_attempt
 
 	@queryset_manager
 	def active_objects(self, queryset):
 		return queryset.filter(deleted=False)
 
-	# @queryset_manager
-	# def get_by_(self, queryset):
-	#     return queryset.filter(deleted=False)
-
+	@classmethod
+	def get_objects(cls, q='', singleword="False"):
+		if q != "":
+			if singleword in true_values:
+				return cls.active_objects(Q(singleword=True) & (Q(inputtext__icontains=q) | Q(translation__icontains=q)))
+			else:
+				return cls.active_objects(Q(inputtext__icontains=q) | Q(translation__icontains=q))
+		else:
+			if singleword in true_values:
+				return cls.active_objects(singleword=True)
+			else:
+				return cls.active_objects
 
 	@classmethod
 	def get_all(cls, q='', singleword="False"):
-		if q != "":
-			if singleword in true_values:
-				return cls.active_objects(Q(singleword=True) & (Q(inputtext__icontains=q) |
-			                                                      Q(translation__icontains=q))).all()
-			else:
-				return cls.active_objects(Q(inputtext__icontains=q) |
-			                                                      Q(translation__icontains=q)).all()
-		else:
-			if singleword in true_values:
-				return cls.active_objects(singleword=True).all()
-			else:
-				return cls.active_objects.all()
+		return cls.get_objects(q, singleword).all()
 
 	@classmethod
 	def get_paginated(cls, page=1, q='', count=5, singleword="False"):
 		if count > 50:
 			count = 50
-		if q != "":
-			if singleword in true_values:
-				return cls.active_objects(Q(singleword=True) & (Q(inputtext__icontains=q) |
-			                                                      Q(translation__icontains=q))).paginate(page, count)
-			else:
-				return cls.active_objects(Q(inputtext__icontains=q) |
-			                                                      Q(translation__icontains=q)).paginate(page, count)
-		else:
-			if singleword in true_values:
-				return cls.active_objects(singleword=True).paginate(page, count)
-			else:
-				return cls.active_objects.paginate(page, count)
+		return cls.get_objects(q, singleword).paginate(page, count)
 
 	@classmethod
 	def pre_save(cls, sender, document, **kwargs):
 		document.updated_at = datetime.now()
 		document.singleword = len(document.inputtext.split()) == 1
+		document.slug = cls._generate_slug("slug", document.inputtext)
 
 	meta = {
 		'indexes': ['inputtext', 'deleted', 'singleword', 'frequency', 'slug'],
@@ -76,6 +75,5 @@ class Word(db.Document):
 
 	def title(self):
 		return self.inputtext
-
 
 signals.pre_save.connect(Word.pre_save, sender=Word)
