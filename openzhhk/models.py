@@ -1,5 +1,5 @@
 from datetime import datetime
-from openzhhk import db
+from openzhhk import db, true_values
 from mongoengine_extras.fields import AutoSlugField
 from mongoengine import signals, queryset_manager, Q
 
@@ -29,14 +29,14 @@ class Word(db.Document):
 	@classmethod
 	def get_all(cls, q='', singleword="False"):
 		if q != "":
-			if singleword == "True" or singleword == "true":
+			if singleword in true_values:
 				return cls.active_objects(Q(singleword=True) & (Q(inputtext__icontains=q) |
 			                                                      Q(translation__icontains=q))).all()
 			else:
 				return cls.active_objects(Q(inputtext__icontains=q) |
 			                                                      Q(translation__icontains=q)).all()
 		else:
-			if singleword == "True" or singleword == "true":
+			if singleword in true_values:
 				return cls.active_objects(singleword=True).all()
 			else:
 				return cls.active_objects.all()
@@ -46,14 +46,14 @@ class Word(db.Document):
 		if count > 50:
 			count = 50
 		if q != "":
-			if singleword == "True" or singleword == "true":
+			if singleword in true_values:
 				return cls.active_objects(Q(singleword=True) & (Q(inputtext__icontains=q) |
 			                                                      Q(translation__icontains=q))).paginate(page, count)
 			else:
 				return cls.active_objects(Q(inputtext__icontains=q) |
 			                                                      Q(translation__icontains=q)).paginate(page, count)
 		else:
-			if singleword == "True" or singleword == "true":
+			if singleword in true_values:
 				return cls.active_objects(singleword=True).paginate(page, count)
 			else:
 				return cls.active_objects.paginate(page, count)

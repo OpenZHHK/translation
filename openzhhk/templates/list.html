@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{# TODO: Add check boxes #}
 {# TODO: Add button to delete #}
 {# TODO: Add links to detail.html #}
 {# TODO: Add links to download as delimited file, along with singleword checkbox #}
@@ -7,6 +6,22 @@
 	<section class="hero">
 		<div class="hero-content">
 		<div class="container">
+			<div class="search">
+				<form>
+					<p class="control is-grouped">
+					  <label class="checkbox">
+					    <input name="singleword" {{ "checked" if sw }} type="checkbox">
+					    Single word
+					  </label>
+					  <input class="input" name="q" type="text" value="{{ q }}" placeholder="Search for a word">
+					  <button class="button is-info">
+					    Search
+					  </button>
+						<a id="file_download_button" class="button">Download</a>
+					</p>
+				</form>
+
+			</div>
 			<table class="table" id="list_table">
 			  <thead>
 			    <tr>
@@ -31,6 +46,7 @@
 	{% block js_footer %}
 		var page = 1;
 		var q = "{{ q }}";
+		var singleword = "{{ singleword }}";
 		var has_next = true;
 		var loading = false;
 		var more_button= $("#more");
@@ -43,13 +59,13 @@
 			if(has_next && !loading)
 			{
 				loading = true;
-				var url = "/api/v1/words?count=15&q="+q+"&page="+page;
+				var url = "/api/v1/words?count=15&q="+q+"&page="+page+"&singleword="+singleword;
 				$.getJSON(url, function(data){
 					if(!data.has_next){
 						has_next = false;
 						more_button.addClass("is-disabled");
 					}
-					console.info(data);
+					// console.info(data);
 					if (data.page == page) {
 						var html = "";
 						$.each(data.words, function (i, item) {
@@ -72,5 +88,12 @@
 	    }
     });
 		load_more();
+
+		$("#file_download_button").on("click",function(e){
+			e.preventDefault();
+			var singleword = $('input[name="singleword"]').is(':checked');
+			var q = $('input[name="q"]').val();
+			window.location = "/api/v1/words_file?q="+q+"&singleword="+singleword;
+		});
 	{% endblock %}
 </script>

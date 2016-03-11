@@ -1,11 +1,12 @@
 from collections import defaultdict
 
-import pymongo
 from flask import Blueprint, request, redirect, render_template, url_for
 from flask.ext.restful import reqparse
 from flask.views import MethodView
-from openzhhk.models import Word
 from flask.ext.mongoengine.wtf import model_form
+
+from openzhhk import true_values
+from openzhhk.models import Word
 
 views = Blueprint('views', __name__, template_folder='templates')
 
@@ -13,11 +14,16 @@ WordForm = model_form(Word)
 
 parser = reqparse.RequestParser()
 parser.add_argument('q', required=False, default='')
+parser.add_argument('singleword', required=False, default='0')
+
 
 class ListView(MethodView):
 	def get(self):
 		args = parser.parse_args()
-		return render_template('list.html', q=args["q"])
+		sw = 0
+		if args["singleword"] in true_values:
+			sw = 1
+		return render_template('list.html', q=args["q"], sw=sw, singleword=args["singleword"])
 
 
 class DetailView(MethodView):

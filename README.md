@@ -44,7 +44,7 @@ Fields:
 > POST /id: Update
 > DELETE /id: Delete
 
-> GET _file?type=(single|multiple): get all words, of the type defined sorted by name in the given format
+> GET _file?singleword=(true|false): get all words, of the type defined sorted by name in the given format
 > POST _file: upload a file with the a delimited file to create word objects in bulk
 
 ## Delimited File Format

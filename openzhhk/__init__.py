@@ -15,6 +15,7 @@ app.config['DEBUG_TB_PANELS'] = ['flask.ext.mongoengine.panels.MongoDebugPanel']
 db = MongoEngine(app)
 toolbar = DebugToolbarExtension(app)
 
+true_values = ["true", "True", "1", "on", "On"]
 
 def register_blueprints(app):
     # Prevents circular imports
