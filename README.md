@@ -16,13 +16,16 @@ Build by [Ankur Singh](ankur13019@iiitd.ac.in) for freelancer user josephlam.
 - Install MongoDB
 - Install pip
 - `pip install -r requirements.txt`
+- `cp .env.example .env`
 - Run `python manage.py seed` (to add some records to play with)
 
 ## Running
 
 > python manage.py runserver
 
-Procfile is present to allow running using foreman or foreman-like systems.
+Procfile is present to allow running using foreman or foreman-like systems. Python based honcho is a good alternative.
+
+> `foreman start` (or `honcho start`)
 
 ## Models
 

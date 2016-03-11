@@ -12,10 +12,14 @@ from openzhhk import app, db
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 manager = Manager(app)
 
+env = os.getenv('ENV', "development")
+dev = env == "development"
+prod = env == "production"
+
 # Turn on debugger by default and reloader
 manager.add_command("runserver", Server(
-	use_debugger=True,
-	use_reloader=True,
+	use_debugger=dev,
+	use_reloader=dev,
 	host=os.getenv('IP', '0.0.0.0'),
 	port=int(os.getenv('PORT', 5000))
 ))

@@ -64,3 +64,4 @@ target/
 *.iml
 out
 gen
+.env

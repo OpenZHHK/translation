@@ -3,7 +3,7 @@ flask-restful
 mongoengine
 pymongo
 mongoengine-extras
-flask_debugtoolbar
 fake-factory
 flask-script
 flask_mongoengine
+honcho
