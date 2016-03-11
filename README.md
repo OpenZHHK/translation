@@ -45,14 +45,14 @@ Fields:
 
 ### /api/v1/words
 
-> GET /?page=1&count=5&q=search_text&singleword=false: Index ordered by frequency, paginated by page and items = count, search with q
-> POST /: Create from params (inputtext, translation, frequency, flags)
-> GET /id: Show
-> POST /id: Update
-> DELETE /id: Delete
+- > GET /?page=1&count=5&q=search_text&singleword=false: Index ordered by frequency, paginated by page and items = count, search with q
+- > POST /: Create from params (inputtext, translation, frequency, flags)
+- > GET /id: Show
+- > POST /id: Update
+- > DELETE /id: Delete
 
-> GET _file?singleword=(true|false): get all words, of the type defined sorted by name in the given format
-> POST _file: upload a file with the a delimited file to create word objects in bulk
+- > GET _file?singleword=(true|false): get all words, of the type defined sorted by name in the given format
+- > POST _file: upload a file with the a delimited file to create word objects in bulk
 
 ## Delimited File Format
 
@@ -78,23 +78,23 @@ i=dimi,t=work,f=192,ff=
 
 ## Routes
 
-> GET /: The search page
-- Display a message if not found
-> GET /new: The new page (the online form) (with the upload button)
-- No Duplicate Entries
-- Definition of unique: (input,translation) is unique
-> GET /list?: Show all the entries, paginated with infinite scroll/lazy load ajax
-- Option type: single/multiple word support
-- Option q: string to search
-- Show the q and type settings on the top of the page
-- Download button for all (use the same settings) (Use two buttons search and download)
-- Show as a simple bootstrap table, with check box and a delete button on top to delete selected after confirmation
-> GET /stats: Show the stats 
-- Entries in the database
-- Latest update date time
-- Unique inputs
-- Unique translations
-- Unique IPs
+- > GET /: The search page
+    - Display a message if not found
+- > GET /new: The new page (the online form) (with the upload button)
+    - No Duplicate Entries
+    - Definition of unique: (input,translation) is unique
+- > GET /list?: Show all the entries, paginated with infinite scroll/lazy load ajax
+    - Option type: single/multiple word support
+    - Option q: string to search
+    - Show the q and type settings on the top of the page
+    - Download button for all (use the same settings) (Use two buttons search and download)
+    - Show as a simple bootstrap table, with check box and a delete button on top to delete selected after confirmation
+- > GET /stats: Show the stats 
+    - Entries in the database
+    - Latest update date time
+    - Unique inputs
+    - Unique translations
+    - Unique IPs
 
 
 
