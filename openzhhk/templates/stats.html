@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<section class="section">
+		<div class="container">
+			<div class="heading">
+				<h1 class="title is-1">OpenZHHK Stats</h1>
+			</div>
+			<hr>
+			<div class="stats">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>Entries in the database</td>
+							<td>{{ stats["entries"] }}</td>
+						</tr>
+						<tr>
+							<td>Latest update date time</td>
+							<td>{{ stats["last_update"] }}</td>
+						</tr>
+						<tr>
+							<td>Unique inputs</td>
+							<td>{{ stats["inputs"] }}</td>
+						</tr>
+						<tr>
+							<td>Unique translations</td>
+							<td>{{ stats["translations"] }}</td>
+						</tr>
+						<tr>
+							<td>Unique IPs</td>
+							<td>{{ stats["ips"] }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+{% endblock %}

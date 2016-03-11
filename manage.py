@@ -27,6 +27,13 @@ def clean():
 
 
 @manager.command
+def soft_clean():
+	words = Word.active_objects.all()
+	for word in words:
+		word.deleted = True
+		word.save()
+
+@manager.command
 def seed():
 	faker = Factory.create()
 	for _ in xrange(50):

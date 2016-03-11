@@ -1,3 +1,6 @@
+from collections import defaultdict
+
+import pymongo
 from flask import Blueprint, request, redirect, render_template, url_for
 from flask.ext.restful import reqparse
 from flask.views import MethodView
@@ -35,7 +38,13 @@ class SearchView(MethodView):
 
 class StatsView(MethodView):
 	def get(self):
-		stats = {}
+		stats = defaultdict()
+		if Word.active_objects:
+			stats["last_update"] = Word.active_objects.order_by("-updated_at").first().updated_at.strftime("%x %X")
+			stats["entries"] = Word.active_objects.count()
+			stats["inputs"] = len(Word.active_objects.distinct("inputtext"))
+			stats["translations"] = len(Word.active_objects.distinct("translation"))
+			stats["ips"] = len(Word.active_objects.distinct("originalip"))
 		return render_template('stats.html', stats=stats)
 
 
