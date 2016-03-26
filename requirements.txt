@@ -7,3 +7,4 @@ fake-factory
 flask-script
 flask_mongoengine
 honcho
+blinker
