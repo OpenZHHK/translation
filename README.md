@@ -99,6 +99,12 @@ i=dimi,t=work,f=192,ff=
     - Unique translations
     - Unique IPs
 
+TODO:
 
+- Ajax update and show in different color in listing page
+- Table sorting
+- Exact word search (instead of fuzzy search)
+- API Docs
+- Handle utf8 characters in files
 
 
