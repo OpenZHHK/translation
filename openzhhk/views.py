@@ -18,40 +18,42 @@ parser.add_argument('singleword', required=False, default='0')
 
 
 class ListView(MethodView):
-	def get(self):
-		args = parser.parse_args()
-		sw = 0
-		if args["singleword"] in true_values:
-			sw = 1
-		return render_template('list.html', q=args["q"], sw=sw)
+    def get(self):
+        args = parser.parse_args()
+        sw = 0
+        if args["q"] == "":
+            return redirect("/")
+        if args["singleword"] in true_values:
+            sw = 1
+        return render_template('list.html', q=args["q"], sw=sw)
 
 
 class DetailView(MethodView):
-	def get(self, slug):
-		word = Word.objects.get_or_404(slug=slug)
-		return render_template('detail.html', word=word)
+    def get(self, slug):
+        word = Word.objects.get_or_404(slug=slug)
+        return render_template('detail.html', word=word)
 
 
 class NewView(MethodView):
-	def get(self):
-		return render_template('new.html')
+    def get(self):
+        return render_template('new.html')
 
 
 class SearchView(MethodView):
-	def get(self):
-		return render_template('search.html')
+    def get(self):
+        return render_template('search.html')
 
 
 class StatsView(MethodView):
-	def get(self):
-		stats = defaultdict()
-		if Word.active_objects:
-			stats["last_update"] = Word.active_objects.order_by("-updated_at").first().updated_at.strftime("%x %X")
-			stats["entries"] = Word.active_objects.count()
-			stats["inputs"] = len(Word.active_objects.distinct("inputtext"))
-			stats["translations"] = len(Word.active_objects.distinct("translation"))
-			stats["ips"] = len(Word.active_objects.distinct("originalip"))
-		return render_template('stats.html', stats=stats)
+    def get(self):
+        stats = defaultdict()
+        if Word.active_objects:
+            stats["last_update"] = Word.active_objects.order_by("-updated_at").first().updated_at.strftime("%x %X")
+            stats["entries"] = Word.active_objects.count()
+            stats["inputs"] = len(Word.active_objects.distinct("inputtext"))
+            stats["translations"] = len(Word.active_objects.distinct("translation"))
+            stats["ips"] = len(Word.active_objects.distinct("originalip"))
+        return render_template('stats.html', stats=stats)
 
 
 # Register the urls
