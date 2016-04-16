@@ -3,6 +3,7 @@ from functools import wraps, update_wrapper
 from datetime import datetime
 import re
 import unicodedata
+import pdb
 
 STRIP_REGEXP = re.compile(r'[^\w\s-]')
 HYPHENATE_REGEXP = re.compile(r'[-\s]+')
@@ -11,9 +12,12 @@ HYPHENATE_REGEXP = re.compile(r'[-\s]+')
 def slugify(value):
     if not isinstance(value, unicode):
         value = unicode(value)
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unicodedata.normalize('NFKD', value).encode('utf8')
     value = unicode(STRIP_REGEXP.sub('', value).strip().lower())
-    return HYPHENATE_REGEXP.sub('-', value)
+    value = HYPHENATE_REGEXP.sub('-', value)
+    if value == "":
+        value = "word"
+    return value
 
 
 def nocache(view):

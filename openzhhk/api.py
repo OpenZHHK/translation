@@ -24,83 +24,80 @@ get_file_parser.add_argument('singleword', required=False, default="False")
 
 
 def get_word(slug):
-	return Word.objects.get_or_404(slug=slug)
+    return Word.objects.get_or_404(slug=slug)
 
 
 def parse_file(file_obj):
-	lines = file_obj.read().split("\n")
-	mapping = {"i": "inputtext", "f": "frequency", "t": "translation", "ff": "flags", "flags": "flags",
-	           "inputtext": "inputtext", "frequency": "frequency", "translation": "translation"}
-	words = []
-	for line in lines:
-		if line:
-			word = {}
-
-			for elem in line.split(","):
-				key, val = elem.split("=")
-				if key in mapping:
-					word_key = mapping[key]
-					word[word_key] = val
-			words.append(Word(**word))
-
-	return words
+    lines = file_obj.read().split("\n")
+    mapping = {"i": "inputtext", "f": "frequency", "t": "translation", "ff": "flags", "flags": "flags",
+               "inputtext": "inputtext", "frequency": "frequency", "translation": "translation"}
+    for line in lines:
+        line = line.strip()
+        if line:
+            word = {}
+            for elem in line.split(","):
+                key, val = elem.split("=")
+                if key in mapping:
+                    word_key = mapping[key]
+                    word[word_key] = val
+            w = (Word(**word))
+            w.save()
 
 
 class Words(Resource):
-	def get(self, slug):
-		obj = get_word(slug)
-		return jsonify({'status': 'ok', 'word': obj})
+    def get(self, slug):
+        obj = get_word(slug)
+        return jsonify({'status': 'ok', 'word': obj})
 
-	def delete(self, slug):
-		obj = get_word(slug)
-		obj.soft_delete()
-		return jsonify({'status': 'ok'})
+    def delete(self, slug):
+        obj = get_word(slug)
+        obj.soft_delete()
+        return jsonify({'status': 'ok'})
 
-	def put(self, slug):
-		obj = get_word(slug)
-		args = form_parser.parse_args()
-		args["lastip"] = request.remote_addr
-		obj.update(**args)
-		obj.reload()
-		return jsonify({'status': 'ok', 'word': obj})
+    def put(self, slug):
+        obj = get_word(slug)
+        args = form_parser.parse_args()
+        args["lastip"] = request.remote_addr
+        obj.update(**args)
+        obj.reload()
+        return jsonify({'status': 'ok', 'word': obj})
 
 
 class WordList(Resource):
-	def get(self):
-		args = parser.parse_args()
-		words = Word.get_paginated(**args)
-		return jsonify({'status': 'ok', 'words': words.items, 'count': words.per_page, 'page': words.page,
-		                'pages': words.pages, 'has_next': words.has_next})
+    def get(self):
+        args = parser.parse_args()
+        words = Word.get_paginated(**args)
+        return jsonify({'status': 'ok', 'words': words.items, 'count': words.per_page, 'page': words.page,
+                        'pages': words.pages, 'has_next': words.has_next})
 
-	def post(self):
-		args = form_parser.parse_args()
-		args["lastip"] = request.remote_addr
-		args["originalip"] = request.remote_addr
-		obj = Word(**args)
-		obj.save()
-		return jsonify({'status': 'ok', 'word': obj})
+    def post(self):
+        args = form_parser.parse_args()
+        args["lastip"] = request.remote_addr
+        args["originalip"] = request.remote_addr
+        obj = Word(**args)
+        obj.save()
+        return jsonify({'status': 'ok', 'word': obj})
 
 
 class WordFile(Resource):
-	@nocache
-	def get(self):
-		args = get_file_parser.parse_args()
-		words = Word.get_all(**args)
-		lines = ""
-		for obj in words:
-			lines += "i=%s,t=%s,f=%s,ff=%s\n" % (obj.inputtext, obj.translation, obj.frequency, obj.flags)
-		sio = StringIO()
-		sio.write(lines)
-		sio.seek(0)
-		return send_file(sio,
-		                 attachment_filename="words.txt",
-		                 as_attachment=True)
+    @nocache
+    def get(self):
+        args = get_file_parser.parse_args()
+        words = Word.get_all(**args)
+        lines = ""
+        for obj in words:
+            lines += "i=%s,t=%s,f=%s,ff=%s\n" % (obj.inputtext.encode('utf8'), obj.translation.encode('utf8'), obj.frequency, obj.flags.encode('utf8'))
+        sio = StringIO()
+        sio.write(lines)
+        sio.seek(0)
+        return send_file(sio,
+                         attachment_filename="words.txt",
+                         as_attachment=True)
 
-	def post(self):
-		f = request.files['file']
-		objs = parse_file(f)
-		x = Word.objects.insert(objs)
-		return jsonify({'status': 'ok'})
+    def post(self):
+        f = request.files['file']
+        objs = parse_file(f)
+        return jsonify({'status': 'ok'})
 
 
 api.add_resource(WordList, '/api/v1/words')

@@ -8,72 +8,74 @@ from openzhhk.utils import slugify
 
 
 class Word(db.Document):
-	inputtext = db.StringField(required=True, unique_with="translation")
-	translation = db.StringField(required=True, unique_with="inputtext")
-	frequency = db.IntField(required=True, default=0, min_value=0)
-	flags = db.StringField(required=False, default="")
-	originalip = db.StringField(required=True, default='0.0.0.0')
-	lastip = db.StringField(required=True, default='0.0.0.0')
-	deleted = db.BooleanField(default=False)
-	singleword = db.BooleanField(default=True)
-	created_at = db.DateTimeField(default=datetime.now())
-	updated_at = db.DateTimeField(default=datetime.now())
-	slug = SlugField(required=True, unique=True)
+    inputtext = db.StringField(required=True, unique_with="translation")
+    translation = db.StringField(required=True, unique_with="inputtext")
+    frequency = db.IntField(required=True, default=0, min_value=0)
+    flags = db.StringField(required=False, default="")
+    originalip = db.StringField(required=True, default='0.0.0.0')
+    lastip = db.StringField(required=True, default='0.0.0.0')
+    deleted = db.BooleanField(default=False)
+    singleword = db.BooleanField(default=True)
+    created_at = db.DateTimeField(default=datetime.now())
+    updated_at = db.DateTimeField(default=datetime.now())
+    slug = SlugField(required=True, unique=True)
 
-	@classmethod
-	def _generate_slug(cls, field, value):
-		count = 1
-		slug = slug_attempt = slugify(value)
-		while cls.objects(**{field: slug_attempt}).count() > 0:
-			slug_attempt = '%s-%s' % (slug, count)
-			count += 1
-		return slug_attempt
+    @classmethod
+    def _generate_slug(cls, field, value):
+        count = 1
+        slug = slug_attempt = slugify(value)
+        while cls.objects(**{field: slug_attempt}).count() > 0:
+            slug_attempt = '%s-%s' % (slug, count)
+            count += 1
+        return slug_attempt
 
-	@queryset_manager
-	def active_objects(self, queryset):
-		return queryset.filter(deleted=False)
+    @queryset_manager
+    def active_objects(self, queryset):
+        return queryset.filter(deleted=False)
 
-	@classmethod
-	def get_objects(cls, q='', singleword="False"):
-		if q != "":
-			if singleword in true_values:
-				return cls.active_objects(Q(singleword=True) & (Q(inputtext__icontains=q) | Q(translation__icontains=q)))
-			else:
-				return cls.active_objects(Q(inputtext__icontains=q) | Q(translation__icontains=q))
-		else:
-			if singleword in true_values:
-				return cls.active_objects(singleword=True)
-			else:
-				return cls.active_objects
+    @classmethod
+    def get_objects(cls, q='', singleword="False"):
+        if q != "":
+            if singleword in true_values:
+                return cls.active_objects(
+                    Q(singleword=True) & (Q(inputtext__icontains=q) | Q(translation__icontains=q)))
+            else:
+                return cls.active_objects(Q(inputtext__icontains=q) | Q(translation__icontains=q))
+        else:
+            if singleword in true_values:
+                return cls.active_objects(singleword=True)
+            else:
+                return cls.active_objects
 
-	@classmethod
-	def get_all(cls, q='', singleword="False"):
-		return cls.get_objects(q, singleword).all()
+    @classmethod
+    def get_all(cls, q='', singleword="False"):
+        return cls.get_objects(q, singleword).all()
 
-	@classmethod
-	def get_paginated(cls, page=1, q='', count=5, singleword="False"):
-		if count > 50:
-			count = 50
-		return cls.get_objects(q, singleword).paginate(page, count)
+    @classmethod
+    def get_paginated(cls, page=1, q='', count=5, singleword="False"):
+        if count > 50:
+            count = 50
+        return cls.get_objects(q, singleword).paginate(page, count)
 
-	@classmethod
-	def pre_save(cls, sender, document, **kwargs):
-		document.updated_at = datetime.now()
-		document.singleword = len(document.inputtext.split()) == 1
-		document.slug = cls._generate_slug("slug", document.inputtext)
+    @classmethod
+    def pre_save(cls, sender, document, **kwargs):
+        document.updated_at = datetime.now()
+        document.singleword = len(document.inputtext.split()) == 1
+        document.slug = cls._generate_slug("slug", document.inputtext)
 
-	meta = {
-		'indexes': ['inputtext', 'deleted', 'singleword', 'frequency', 'slug'],
-		'ordering': ['inputtext', '-frequency']
-	}
+    meta = {
+        'indexes': ['inputtext', 'translation', 'deleted', 'singleword', 'frequency', 'slug'],
+        'ordering': ['inputtext', '-frequency']
+    }
 
-	def soft_delete(self):
-		self.update(deleted=True)
+    def soft_delete(self):
+        self.update(deleted=True)
 
-	def __unicode__(self):
-		return self.inputtext
+    def __unicode__(self):
+        return self.inputtext or u''
 
-	def title(self):
-		return self.inputtext
+    def title(self):
+        return self.inputtext
+
 
 signals.pre_save.connect(Word.pre_save, sender=Word)
