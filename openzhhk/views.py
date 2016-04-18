@@ -44,6 +44,11 @@ class SearchView(MethodView):
         return render_template('search.html')
 
 
+class APIView(MethodView):
+    def get(self):
+        return render_template('api.html')
+
+
 class StatsView(MethodView):
     def get(self):
         stats = defaultdict()
@@ -61,5 +66,5 @@ views.add_url_rule('/', view_func=SearchView.as_view('search'))
 views.add_url_rule('/list', view_func=ListView.as_view('list'))
 views.add_url_rule('/new', view_func=NewView.as_view('new'))
 views.add_url_rule('/stats', view_func=StatsView.as_view('stats'))
+views.add_url_rule('/api', view_func=APIView.as_view('api'))
 views.add_url_rule('/word/<slug>', view_func=DetailView.as_view('detail'))
-

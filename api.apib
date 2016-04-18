@@ -1,0 +1,268 @@
+FORMAT: 1A
+HOST: http://openzhhk.herokuapp.com/api/v1
+
+# OpenZHHK
+
+Open API for OpenZHHK, the #1 English Pinyin to Cantonese Database.
+
+## Words [/words]
+
+### Search Words [GET]
+
+End point to search a word and get paginated results.
+
++ q (string) - the exact word that is searched
++ page (integer) - page number for pagination
++ count (integer) - number of words per page
++ singleword (boolean) - if true, searches for only single words
+
+
++ Parameters
+
+    + q (string) - the exact word that is searched
+
+
++ Response 200 (application/json)
+
+        {
+          "count": 2,
+          "has_next": true,
+          "page": 1,
+          "pages": 2,
+          "status": "ok",
+          "words": [
+            {
+              "_id": {
+                "$oid": "5711e17ef5f6f8823ea930fb"
+              },
+              "created_at": {
+                "$date": 1460809430479
+              },
+              "deleted": false,
+              "flags": "common",
+              "frequency": 90,
+              "inputtext": "hello",
+              "lastip": "0.0.0.0",
+              "originalip": "0.0.0.0",
+              "singleword": true,
+              "slug": "hello-1",
+              "translation": "world",
+              "updated_at": {
+                "$date": 1460809430655
+              }
+            },
+            {
+              "_id": {
+                "$oid": "5711e0d7f5f6f8822759963c"
+              },
+              "created_at": {
+                "$date": 1460809262974
+              },
+              "deleted": false,
+              "flags": "complicated",
+              "frequency": 95,
+              "inputtext": "foo",
+              "lastip": "0.0.0.0",
+              "originalip": "0.0.0.0",
+              "singleword": true,
+              "slug": "foo-2",
+              "translation": "bar",
+              "updated_at": {
+                "$date": 1460809263075
+              }
+            }
+          ]
+        }
+
+### Add a translation [POST]
+
+You can help us by adding your translation to our database. The parameters can be either POST data or URL encoded.
+
++ inputtext (string) - the word to be added
++ translation (string) - the translation of that word
++ frequency (integer) - frequency of that word
++ flags (string) - flags associated to that word
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "status": "ok",
+              "word": {
+                "_id": {
+                  "$oid": "5711e8d3f5f6f897f4eb3bb1"
+                },
+                "created_at": {
+                  "$date": 1460811058762
+                },
+                "deleted": false,
+                "flags": "flags",
+                "frequency": 12,
+                "inputtext": "word",
+                "lastip": "127.0.0.1",
+                "originalip": "127.0.0.1",
+                "singleword": true,
+                "slug": "asd",
+                "translation": "translation",
+                "updated_at": {
+                  "$date": 1460811307644
+                }
+              }
+            }
+
+## Word [/word/{id}]
+
+To perform actions on a single transalation based on the primary key (id)
+
++ Parameters
+
+    + id (string) - the id of the word/translation
+
+### Show a translation [GET]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "status": "ok",
+              "word": {
+                "_id": {
+                  "$oid": "5711e8d3f5f6f897f4eb3bb1"
+                },
+                "created_at": {
+                  "$date": 1460811058762
+                },
+                "deleted": false,
+                "flags": "flags",
+                "frequency": 12,
+                "inputtext": "word",
+                "lastip": "127.0.0.1",
+                "originalip": "127.0.0.1",
+                "singleword": true,
+                "slug": "asd",
+                "translation": "translation",
+                "updated_at": {
+                  "$date": 1460811307644
+                }
+              }
+            }
+
+
+### Update a translation [PUT]
+
+The following parameters can be send as either request params or post params/
+
++ inputtext (string) - the word to be added
++ translation (string) - the translation of that word
++ frequency (integer) - frequency of that word
++ flags (string) - flags associated to that word
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "status": "ok",
+              "word": {
+                "_id": {
+                  "$oid": "5711e8d3f5f6f897f4eb3bb1"
+                },
+                "created_at": {
+                  "$date": 1460811058762
+                },
+                "deleted": false,
+                "flags": "flags",
+                "frequency": 12,
+                "inputtext": "word",
+                "lastip": "127.0.0.1",
+                "originalip": "127.0.0.1",
+                "singleword": true,
+                "slug": "asd",
+                "translation": "translation",
+                "updated_at": {
+                  "$date": 1460811307644
+                }
+              }
+            }
+
+
+### Delete a translation [DELETE]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "status": "ok"
+            }
+
+
+## Word File [/words_file]
+
+To get and upload the translations as a delimited file
+
+
+#### Delimited file format
+
+```
+input=bonjour,translation=hello,frequency=222,flags=greeting
+input=archi,translation=bye,frequency=212,flags=greeting
+input=dimi,translation=work,frequency=192,flags=
+input=coupe,translation=love,frequency=102,flags=
+input=aubau,translation=food,frequency=34,flags=
+
+To shorten the file, the following abbriviations might be used:
+
+input = i
+translation = t
+frequency = f
+flags = ff
+```
+
+### Show a translation [GET]
+
+To get the translations of a word specified by "q" as a delimited file.
+
++ q (string) - the exact word that is searched
++ page (integer) - page number for pagination
++ count (integer) - number of words per page
++ singleword (boolean) - if true, searches for only single words
+
+
++ Parameters
+
+    + q (string) - the exact word that is searched
+
+
++ Response 200 (text/plain)
+
+    + Body
+
+            Attachment: words.txt
+
+
+### Upload translation [POST]
+
+You can help us by adding your translation to our database. You need to upload
+
++ Request (multipart/form-data)
+
+        + Part
+
+            + Headers
+
+                    Content-Disposition: form-data; name="file"; filename="words.txt"
+
+            + Body
+
+                    delimited data
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "status": "ok"
+            }

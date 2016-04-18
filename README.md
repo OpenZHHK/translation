@@ -50,12 +50,17 @@ Fields:
 
 - > GET /?page=1&count=5&q=search_text&singleword=false: Index ordered by frequency, paginated by page and items = count, search with q
 - > POST /: Create from params (inputtext, translation, frequency, flags)
+
+### /api/v1/word
+
 - > GET /id: Show
 - > POST /id: Update
 - > DELETE /id: Delete
 
-- > GET _file?singleword=(true|false): get all words, of the type defined sorted by name in the given format
-- > POST _file: upload a file with the a delimited file to create word objects in bulk
+### /api/v1/words_file
+
+- > GET /?singleword=(true|false): get all words, of the type defined sorted by name in the given format
+- > POST /: upload a file with the a delimited file to create word objects in bulk
 
 ## Delimited File Format
 
@@ -99,10 +104,23 @@ i=dimi,t=work,f=192,ff=
     - Unique translations
     - Unique IPs
 
+- API Docs
+
+The html version can be accessed at "/api" and is present in "/openzhhk/templates/api.html". 
+
+The api docs are in API Blueprint format in the file /api.apib. It uses [Aglio](https://github.com/danielgtaylor/aglio) to convert the apib file to a html page with two column streak theme. 
+
+To install Aglio, run 
+
+> npm install -g aglio
+
+To convert the api.apib file to the html file, run:
+
+> aglio -i api.apib -o openzhhk/templates/api.html -t streak
+
 TODO:
 
 - Ajax update and show in different color in listing page
 - Table sorting
-- API Docs
 
 

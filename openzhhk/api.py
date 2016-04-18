@@ -11,6 +11,7 @@ form_parser = reqparse.RequestParser()
 form_parser.add_argument('inputtext', required=True)
 form_parser.add_argument('translation', required=True)
 form_parser.add_argument('frequency', required=False)
+form_parser.add_argument('flags', required=False)
 
 parser = reqparse.RequestParser()
 parser.add_argument('q', required=False, default='')
