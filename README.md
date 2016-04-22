@@ -120,7 +120,7 @@ To convert the api.apib file to the html file, run:
 
 TODO:
 
-- Ajax update and show in different color in listing page
 - Table sorting
+- IE Bug in front page (vertical center breaks)
 
 
