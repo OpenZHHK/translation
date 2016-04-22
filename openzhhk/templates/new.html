@@ -47,6 +47,10 @@
 						<input class="input" required="required" name="frequency" type="number" placeholder="1">
 					</p>
 					<p class="control">
+						<label class="label">Flags</label>
+						<input class="input" name="flags" type="text" placeholder="Flags">
+					</p>
+					<p class="control">
 						<button class="button is-success">
 							Save!
 						</button>
@@ -64,7 +68,8 @@
 			var formData = {
 				'inputtext': $('input[name="inputtext"]').val(),
 				'translation': $('input[name="translation"]').val(),
-				'frequency': $('input[name="frequency"]').val()
+				'frequency': $('input[name="frequency"]').val(),
+				'flags': $('input[name="flags"]').val()
 			};
 
 			// process the form
