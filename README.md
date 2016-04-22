@@ -103,8 +103,9 @@ i=dimi,t=work,f=192,ff=
     - Unique inputs
     - Unique translations
     - Unique IPs
+- > GET /api: Show the api doc page
 
-- API Docs
+## API Docs
 
 The html version can be accessed at "/api" and is present in "/openzhhk/templates/api.html". 
 
