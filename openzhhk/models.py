@@ -52,10 +52,10 @@ class Word(db.Document):
         return cls.get_objects(q, singleword).all()
 
     @classmethod
-    def get_paginated(cls, page=1, q='', count=5, singleword="False"):
+    def get_paginated(cls, page=1, q='', count=5, singleword="False", sort="inputtext"):
         if count > 50:
             count = 50
-        return cls.get_objects(q, singleword).paginate(page, count)
+        return cls.get_objects(q, singleword).order_by(sort).paginate(page, count)
 
     @classmethod
     def pre_save(cls, sender, document, **kwargs):

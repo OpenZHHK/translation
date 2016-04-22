@@ -28,14 +28,14 @@
                     <tr>
                         <th></th>
                         <th class="sort word headerSortDown">Word</th>
-                        <th class="sort translation headerSortUp">Translation</th>
+                        <th class="sort translation">Translation</th>
                         <th class="sort frequency ">Frequency</th>
                         <th class="sort flags">Flags</th>
                         <th></th>
                         <th></th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="list">
                     </tbody>
                 </table>
                 <a id="more" class="button">More</a>
@@ -52,6 +52,7 @@
         var singleword = "{{ sw }}";
         var has_next = true;
         var loading = false;
+        var sort = "inputtext";
         var more_button = $("#more");
 
         function generate_tr_view(data) {
@@ -70,7 +71,7 @@
         function load_more() {
             if (has_next && !loading) {
                 loading = true;
-                var url = "/api/v1/words?count=15&q=" + q + "&page=" + page + "&singleword=" + singleword;
+                var url = "/api/v1/words?count=15&q=" + q + "&page=" + page + "&singleword=" + singleword + "&sort=" + sort;
                 $.getJSON(url, function (data) {
                     if (!data.has_next) {
                         has_next = false;
@@ -83,7 +84,7 @@
                             html += generate_tr_view(item);
                             html += generate_tr_edit(item);
                         });
-                        $("#list_table").append(html);
+                        $("#list").append(html);
                         page += 1;
                         loading = false;
                     }
@@ -170,25 +171,36 @@
         $("th.sort").on('click',function(){
             var o = $(this);
             var ths = $("th");
+            var s = "";
+            if(o.hasClass("word")) s = "inputtext";
+            else if(o.hasClass("translation")) s = "translation";
+            else if(o.hasClass("frequency")) s = "frequency";
+            else if(o.hasClass("flags")) s = "flags";
+            $("#list").html("");
+
             if(o.hasClass("headerSortDown")){
                 // Sort up
                 ths.removeClass("headerSortDown");
                 ths.removeClass("headerSortUp");
                 o.addClass("headerSortUp");
+                s = "-" + s;
             }
             else if(o.hasClass("headerSortUp")){
                 // Sort default
                 ths.removeClass("headerSortDown");
                 ths.removeClass("headerSortUp");
-
+                s = "inputtext"
             }
             else{
                 // Sort Down
                 ths.removeClass("headerSortDown");
                 ths.removeClass("headerSortUp");
                 o.addClass("headerSortDown");
-
             }
+            page = 1;
+            has_next = true;
+            sort = s;
+            load_more();
         });
     {% endblock %}
 </script>
