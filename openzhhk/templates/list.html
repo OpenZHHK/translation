@@ -31,6 +31,8 @@
 						<th>Translation</th>
 						<th>Frequency</th>
 						<th>Flags</th>
+                        <th></th>
+                        <th></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -53,7 +55,13 @@
 		var more_button = $("#more");
 
 		function generate_tr(data) {
-			html = "<tr><td><input class='word-check' name='check' data-oid='" + data.slug + "' type='checkbox'></td><td>" + data.inputtext + "</td><td>" + data.translation + "</td><td>" + data.frequency + "</td><td>" + data.flags + "</td></tr>";
+			html = "<tr class='"+data.slug+"-view' data-oid='" + data.slug + "'><td><input class='word-check' name='check' data-oid='" + data.slug + "' type='checkbox'></td><td>" + data.inputtext + "</td><td>" + data.translation + "</td><td>" + data.frequency + "</td><td>" + data.flags + "</td><td></td><td><a class='button is-small edit-button'>Edit</a></tr>";
+			html += "<tr style='display: none' class='"+data.slug+"-edit' data-oid='" + data.slug + "'><td></td><td>"
+                    + '<input class="input" required="required" name="inputtext" type="text" placeholder="Word" value="'+ data.inputtext + "\"></td><td>"
+                    + '<input class="input" required="required" name="translation" type="text" placeholder="Translation" value="'+ data.translation + "\"></td><td>"
+                    + '<input class="input" name="frequency" type="number" placeholder="Frequency" value="'+ data.frequency + "\"></td><td>"
+                    + '<input class="input" name="flags" type="text" placeholder="Translation" value="'+ data.flags + "\"></td><td>"
+                    + "<a class='button save-button is-success'><i class='fa fa-check'></i></a></td><td> <a class='button   cancel-button is-danger'><i class='fa fa-times'></i></a></td></tr>";
 			return html;
 		}
 		function load_more() {
@@ -111,5 +119,53 @@
 				});
 			});
 		});
+
+        $(document).on("click",".edit-button",function(e){
+            e.preventDefault();
+            var oid = $(this).parents("tr").data('oid');
+            $("."+oid+"-view").hide();
+            $("."+oid+"-edit").show();
+        });
+        $(document).on("click",".save-button",function(e){
+            e.preventDefault();
+            var oid = $(this).parents("tr").data('oid');
+            $("."+oid+"-view").show();
+            $("."+oid+"-edit").hide();
+            var edittext= "." + oid + "-edit";
+			// get the form data
+			var formData = {
+				'inputtext': $(edittext + ' input[name="inputtext"]').val(),
+				'translation': $(edittext + ' input[name="translation"]').val(),
+				'frequency': $(edittext + ' input[name="frequency"]').val(),
+                'flags': $(edittext + ' input[name="flags"]').val()
+			};
+
+			// process the form
+			$.ajax({
+				type: 'PUT',
+				url: '/api/v1/word/'+oid,
+				data: formData,
+				dataType: 'json',
+				encode: true
+			}).done(function (data) {
+				$("#new-success").removeClass("hidden");
+				setTimeout(function(){
+					$("#new-success").addClass("hidden");
+				},5000);
+			}).fail(function (data) {
+				$("#new-error").removeClass("hidden");
+				setTimeout(function(){
+					$("#new-error").addClass("hidden");
+				},5000);
+				console.log(data);
+			});
+
+        });
+        $(document).on("click",".cancel-button",function(e){
+            e.preventDefault();
+            var oid = $(this).parents("tr").data('oid');
+            $("."+oid+"-view").show();
+            $("."+oid+"-edit").hide();
+        });
 	{% endblock %}
 </script>

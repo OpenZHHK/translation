@@ -122,5 +122,6 @@ TODO:
 
 - Ajax update and show in different color in listing page
 - Table sorting
+- Add flags to new form
 
 
