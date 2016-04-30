@@ -122,5 +122,6 @@ To convert the api.apib file to the html file, run:
 TODO:
 
 - IE Bug in front page (vertical center breaks)
-
+- Download all button
+- if not exist, take to new page
 
