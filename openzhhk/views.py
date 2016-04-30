@@ -1,12 +1,14 @@
+from cStringIO import StringIO
 from collections import defaultdict
 
-from flask import Blueprint, request, redirect, render_template, url_for
+from flask import Blueprint, request, redirect, render_template, url_for, send_file
 from flask.ext.restful import reqparse
 from flask.views import MethodView
 from flask.ext.mongoengine.wtf import model_form
 
 from openzhhk import true_values
 from openzhhk.models import Word
+from openzhhk.utils import nocache
 
 views = Blueprint('views', __name__, template_folder='templates')
 
@@ -48,7 +50,19 @@ class APIView(MethodView):
     def get(self):
         return render_template('api.html')
 
-
+class DownloadView(MethodView):
+    @nocache
+    def get(self):
+        words = Word.get_all()
+        lines = ""
+        for obj in words:
+            lines += "i=%s,t=%s,f=%s,ff=%s\n" % (obj.inputtext.encode('utf8'), obj.translation.encode('utf8'), obj.frequency, obj.flags.encode('utf8'))
+        sio = StringIO()
+        sio.write(lines)
+        sio.seek(0)
+        return send_file(sio,
+                         attachment_filename="database.txt",
+                         as_attachment=True)
 class StatsView(MethodView):
     def get(self):
         stats = defaultdict()
@@ -68,3 +82,4 @@ views.add_url_rule('/new', view_func=NewView.as_view('new'))
 views.add_url_rule('/stats', view_func=StatsView.as_view('stats'))
 views.add_url_rule('/api', view_func=APIView.as_view('api'))
 views.add_url_rule('/word/<slug>', view_func=DetailView.as_view('detail'))
+views.add_url_rule('/download', view_func=DownloadView.as_view('download'))

@@ -35,17 +35,17 @@ class Word(db.Document):
 
     @classmethod
     def get_objects(cls, q='', singleword="False"):
-        # if q != "":
+        if q != "":
             if singleword in true_values:
                 return cls.active_objects(
                     Q(singleword=True) & (Q(inputtext=q) | Q(translation=q)))
             else:
                 return cls.active_objects(Q(inputtext=q) | Q(translation=q))
-        # else:
-        #     if singleword in true_values:
-        #         return cls.active_objects(singleword=True)
-        #     else:
-        #         return cls.active_objects
+        else:
+            if singleword in true_values:
+                return cls.active_objects(singleword=True)
+            else:
+                return cls.active_objects
 
     @classmethod
     def get_all(cls, q='', singleword="False"):

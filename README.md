@@ -103,6 +103,7 @@ i=dimi,t=work,f=192,ff=
     - Unique inputs
     - Unique translations
     - Unique IPs
+- > GET /download: Download the entire database
 - > GET /api: Show the api doc page
 
 ## API Docs
