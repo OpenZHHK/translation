@@ -33,6 +33,11 @@ class Word(db.Document):
     def active_objects(self, queryset):
         return queryset.filter(deleted=False)
 
+
+    @classmethod
+    def exists(cls, q=''):
+        return cls.active_objects(Q(inputtext=q) | Q(translation=q)).count() > 0
+
     @classmethod
     def get_objects(cls, q='', singleword="False"):
         if q != "":

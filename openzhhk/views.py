@@ -24,7 +24,10 @@ class ListView(MethodView):
             return redirect("/")
         if args["singleword"] in true_values:
             sw = 1
-        return render_template('list.html', q=args["q"], sw=sw)
+        if not Word.exists(args["q"]):
+            return redirect("/new?q="+args["q"])
+        else:
+            return render_template('list.html', q=args["q"], sw=sw)
 
 
 class DetailView(MethodView):
@@ -35,7 +38,8 @@ class DetailView(MethodView):
 
 class NewView(MethodView):
     def get(self):
-        return render_template('new.html')
+        args = parser.parse_args()
+        return render_template('new.html', q=args["q"])
 
 
 class SearchView(MethodView):
