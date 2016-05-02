@@ -6,6 +6,9 @@
 			<div class="heading">
 				<h1 class="title">New Translation</h1>
 				<h2 class="subtitle">
+                    {% if q %}
+                        The translation for word "{{ q }}" was not found.<br>
+                    {% endif %}
 					Help us out by adding a new translation.
 				</h2>
 			</div>
