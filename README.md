@@ -118,7 +118,7 @@ To install Aglio, run
 
 To convert the api.apib file to the html file, run:
 
-> aglio -i api.apib -o openzhhk/templates/api.html -theme-variables streak
+> aglio -i api.apib -o openzhhk/templates/api.html --theme-variables streak
 
 TODO:
 
