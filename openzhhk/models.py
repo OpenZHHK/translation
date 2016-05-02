@@ -36,16 +36,16 @@ class Word(db.Document):
 
     @classmethod
     def exists(cls, q=''):
-        return cls.active_objects(Q(inputtext=q) | Q(translation=q)).count() > 0
+        return cls.active_objects(Q(inputtext__iexact=q) | Q(translation__iexact=q)).count() > 0
 
     @classmethod
     def get_objects(cls, q='', singleword="False"):
         if q != "":
             if singleword in true_values:
                 return cls.active_objects(
-                    Q(singleword=True) & (Q(inputtext=q) | Q(translation=q)))
+                    Q(singleword=True) & (Q(inputtext__iexact=q) | Q(translation__iexact=q)))
             else:
-                return cls.active_objects(Q(inputtext=q) | Q(translation=q))
+                return cls.active_objects(Q(inputtext__iexact=q) | Q(translation__iexact=q))
         else:
             if singleword in true_values:
                 return cls.active_objects(singleword=True)
