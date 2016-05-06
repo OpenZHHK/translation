@@ -9,10 +9,10 @@
                     {% if q %}
                         The translation for word "{{ q }}" was not found.<br>
                     {% endif %}
-					Help us out by adding a new translation.
+					Contribute to the database by adding new translations
 				</h2>
 			</div>
-			<h1>Upload a encoded translation file</h1>
+			<h1>Upload an encoded translation file</h1>
 			<div class="upload_file">
 				<form class="tf_form" action="/api/v1/words_file" method="post" enctype="multipart/form-data">
 					<p class="control">
@@ -20,13 +20,13 @@
 					</p>
 					<p class="control">
 						<button class="button is-success">
-							Upload!
+							Upload
 						</button>
 					</p>
 				</form>
 			</div>
 			<hr>
-			<h1>Or add via this form</h1>
+			<h1>Or add a new translation with this form</h1>
 			<div class="t_form">
 				<form id="new_form">
 					<div id="new-success" class="message is-success hidden">
@@ -55,7 +55,7 @@
 					</p>
 					<p class="control">
 						<button class="button is-success">
-							Save!
+							Save
 						</button>
 					</p>
 				</form>
