@@ -20,8 +20,8 @@ class ListView(MethodView):
     def get(self):
         args = parser.parse_args()
         sw = 0
-        if args["q"] == "":
-            return redirect("/")
+        ##if args["q"] == "":
+        ##    return redirect("/")
         if args["singleword"] in true_values:
             sw = 1
         if not Word.exists(args["q"]):
