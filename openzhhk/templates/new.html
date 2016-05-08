@@ -70,9 +70,9 @@
 			// get the form data
 			var formData = {
 				'inputtext': $('input[name="inputtext"]').val().trim().toLowerCase(),
-				'translation': $('input[name="translation"]').val(),
-				'frequency': $('input[name="frequency"]').val(),
-				'flags': $('input[name="flags"]').val()
+				'translation': $('input[name="translation"]').val().trim(),
+				'frequency': $('input[name="frequency"]').val().trim(),
+				'flags': $('input[name="flags"]').val().trim().toLowerCase()
 			};
 
 			// process the form
