@@ -69,7 +69,7 @@
 		$form.submit(function (e) {
 			// get the form data
 			var formData = {
-				'inputtext': $trim($('input[name="inputtext"]').val()).toLowerCase(),
+				'inputtext': $('input[name="inputtext"]').val().trim().toLowerCase(),
 				'translation': $('input[name="translation"]').val(),
 				'frequency': $('input[name="frequency"]').val(),
 				'flags': $('input[name="flags"]').val()
