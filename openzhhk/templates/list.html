@@ -48,7 +48,7 @@
 <script>
     {% block js_footer %}
         var page = 1;
-        var q = "{{ q }}";
+        var q = "{{ q }}".trim().toLowerCase();
         var singleword = "{{ sw }}";
         var has_next = true;
         var loading = false;
