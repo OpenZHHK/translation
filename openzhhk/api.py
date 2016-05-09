@@ -86,8 +86,8 @@ class WordFile(Resource):
     def get(self):
         args = get_file_parser.parse_args()
         words = Word.get_all(**args)
-        apache = "Copyright 2016 OpenZHHK.com\n\nLicensed under the Apache License, version 2.0 (the ""License"");\nYou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0"
-        lines = ""
+        apache = "*****\nCopyright 2016 OpenZHHK.com\n\nLicensed under the Apache License, version 2.0 (the ""License"");\nYou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n*****"
+        lines = "" + apache
         for obj in words:
             lines += "i=%s,t=%s,f=%s,ff=%s\n" % (obj.inputtext.encode('utf8'), obj.translation.encode('utf8'), obj.frequency, obj.flags.encode('utf8'))
         sio = StringIO()
