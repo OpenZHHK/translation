@@ -20,7 +20,7 @@ class ListView(MethodView):
     def get(self):
         args = parser.parse_args()
         sw = 0
-		q = args["q"]
+        q = args["q"]
         if args["q"] == "":
             return render_template('list.html', q=args["q"], sw=sw)
         if args["singleword"] in true_values:
