@@ -21,14 +21,14 @@ class ListView(MethodView):
         args = parser.parse_args()
         sw = 0
         q = args["q"].strip().lower().replace("%20", " ")
-        if args["q"] == "":
-            return render_template('list.html', q=args["q"], sw=sw)
+        if q == "":
+            return render_template('list.html', q=q, sw=sw)
         if args["singleword"] in true_values:
             sw = 1
-        if not Word.exists(args["q"]):
-            return redirect("/new?q="+args["q"])
+        if not Word.exists(q):
+            return redirect("/new?q="+q)
         else:
-            return render_template('list.html', q=args["q"], sw=sw)
+            return render_template('list.html', q=q, sw=sw)
 
 
 class DetailView(MethodView):
