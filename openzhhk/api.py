@@ -94,7 +94,7 @@ class WordFile(Resource):
         sio.write(lines)
         sio.seek(0)
         return send_file(sio,
-                         attachment_filename="words.txt",
+                         attachment_filename="openzhhk_cantonese_view.txt",
                          as_attachment=True)
 
     def post(self):

@@ -64,7 +64,7 @@ class DownloadView(MethodView):
         sio.write(lines)
         sio.seek(0)
         return send_file(sio,
-                         attachment_filename="database.txt",
+                         attachment_filename="openzhhk_cantonese_db.txt",
                          as_attachment=True)
 class StatsView(MethodView):
     def get(self):
