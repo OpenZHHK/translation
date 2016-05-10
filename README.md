@@ -1,6 +1,6 @@
-# OpenZHHK App
+# OpenZHHK Translation System
 
-Build by [Ankur Singh](ankur13019@iiitd.ac.in) for freelancer user josephlam.
+Used by the OpenZHHK Foundation at http://www.openzhhk.com
 
 ## Tech Specs
 
